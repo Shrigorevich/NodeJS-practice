@@ -7,7 +7,18 @@ import fs from "node:fs/promises";
 
   fileDescriptor.on("change", async () => {
     const command = await readCommand(fileDescriptor);
-    console.log(`Command: ${command}`);
+    const action = command.split(" ")[0].trim();
+
+    switch (action) {
+      case "create":
+        await createFile(command.split(" ")[1].trim());
+        break;
+      case "delete":
+        await deleteFile(command.split(" ")[1].trim());
+        break;
+      default:
+        console.log("Unknown command");
+    }
   });
 
   const watcher = fs.watch(filePath);
@@ -35,4 +46,16 @@ async function readCommand(fileDescriptor) {
   const position = 0;
   await fileDescriptor.read(buffer, offset, fileSize, position);
   return buffer.toString("utf-8");
+}
+
+async function createFile(path) {
+  const fileDescriptor = await fs.open(path, "a");
+  await fileDescriptor.close();
+}
+
+async function deleteFile(path) {
+  await fs.rm(path, {
+    force: true,
+    recursive: true,
+  });
 }

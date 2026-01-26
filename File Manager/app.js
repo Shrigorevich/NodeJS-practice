@@ -16,6 +16,9 @@ import fs from "node:fs/promises";
       case "delete":
         await deleteFile(command.split(" ")[1].trim());
         break;
+      case "unlink":
+        await unlink(command.split(" ")[1].trim());
+        break;
       default:
         console.log("Unknown command");
     }
@@ -58,4 +61,8 @@ async function deleteFile(path) {
     force: true,
     recursive: true,
   });
+}
+
+async function unlink(path) {
+  await fs.unlink(path);
 }

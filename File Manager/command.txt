@@ -1,1 +1,1 @@
-Test command
+unlink test.lnk
